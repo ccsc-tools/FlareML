@@ -24,7 +24,7 @@ from datetime import datetime
 import argparse
 import time 
 
-from mlaas_utils import *
+from flareml_utils import *
 
 TRAIN_INPUT = 'train_data/flaringar_training_sample.csv'
 TEST_INPUT = 'test_data/flaringar_simple_random_40.csv'
@@ -110,7 +110,7 @@ def train_model(args):
     ens = ''
     if alg == 'ENS':
         ens = '(s)'
-    print('Finished training the', alg ,'model' + str(ens)+  ', you may use the mlaas_test.py program to make prediction.')
+    print('Finished training the', alg ,'model' + str(ens)+  ', you may use the flareml_test.py program to make prediction.')
                     
 '''
 Command line parameters parser

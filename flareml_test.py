@@ -24,7 +24,7 @@ from datetime import datetime
 import argparse
 import time 
 
-from mlaas_utils import *
+from flareml_utils import *
 
 TEST_INPUT = 'test_data/flaringar_simple_random_40.csv'
 normalize_data = False 
