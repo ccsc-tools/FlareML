@@ -12,7 +12,6 @@ Python Packages:
 The following python packages and modules are required to run MLaaS:
 pandas
 numpy
-sklearn
 scikit-learn
 sklearn_extensions
 
@@ -41,7 +40,7 @@ After downloading the zip files from https://web.njit.edu/~wangj/MLaaS/, unzip t
  mlaas_utils.py   - utilities program used by the test and training programs
  
 Running a Test/Prediction Task:
-1.	To run a test/prediction, you may use the existing data sets from the "test_dataî directory or provide your own file. 
+1.	To run a test/prediction, you may use the existing data sets from the "test_data‚Äù directory or provide your own file. 
 2.	mlaas_test.py is used to run the test/prediction. 
 Type: python mlaas_test.py -h will show you the available options as follows:
 	usage: mlaas_test.py [-h] [-t TEST_DATA_FILE] [-l LOGFILE] [-v VERBOSE] [-a ALGORITHM] [-m MODELID]
