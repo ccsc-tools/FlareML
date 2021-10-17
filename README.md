@@ -11,7 +11,7 @@ Yasser Abduallah, Jason T. L. Wang, Haimin Wang
 This notebook is Binder enabled and can be run on [mybinder.org](https://mybinder.org/) by using the link below.
 
 
-### run_SolarUnet.ipynb (Jupyter Notebook for SolarUnet)
+### ccsc_FlareML.ipynb (Jupyter Notebook for FlareML)
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/ccsc-tools/SolarUnet-magnetic-tracking/HEAD?labpath=run_SolarUnet.ipynb) 
 
 Please note that starting Binder might take some time to create and start the image.
