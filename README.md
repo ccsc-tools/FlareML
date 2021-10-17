@@ -12,7 +12,7 @@ This notebook is Binder enabled and can be run on [mybinder.org](https://mybinde
 
 
 ### ccsc_FlareML.ipynb (Jupyter Notebook for FlareML)
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/ccsc-tools/SolarUnet-magnetic-tracking/HEAD?labpath=run_SolarUnet.ipynb) 
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/ccsc-tools/FlareML/HEAD?labpath=ccsc_FlareML.ipynb)
 
 Please note that starting Binder might take some time to create and start the image.
 
