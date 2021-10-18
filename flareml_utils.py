@@ -609,8 +609,8 @@ def log_cv_report(y_true,y_pred):
     log(ac)
     log('Prediction accuracy:', ac)
 
-def save_result_to_file(alg, result, dataset, flares_names):
-    result_file =  'results' + os.sep  + str(alg) +'_result.csv'
+def save_result_to_file(alg, result, dataset, flares_names, modelid):
+    result_file =  'results' + os.sep  + str(alg) +'_' + str(modelid) + '_result.csv'
     print('Writing result to file:', result_file)
     dataset_ens = dataset[:]
     dataset_ens = dataset_ens.drop('flarecn', axis=1)

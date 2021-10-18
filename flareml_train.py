@@ -26,8 +26,8 @@ import time
 
 from flareml_utils import *
 
-TRAIN_INPUT = 'train_data/flaringar_training_sample.csv'
-TEST_INPUT = 'test_data/flaringar_simple_random_40.csv'
+TRAIN_INPUT = 'data/train_data/flaringar_training_sample.csv'
+TEST_INPUT = 'data/test_data/flaringar_simple_random_40.csv'
 normalize_data = False
 def train_model(args):
     algorithm = args['algorithm']
@@ -123,7 +123,8 @@ parser.add_argument('-a',  '--algorithm', default='ENS',  help='Algorithm to use
 parser.add_argument('-m', '--modelid', default='default_model', help='model id to save or load it as a file name. This is to identity each trained model.')
 parser.add_argument('-n', '--normalize_data', default=normalize_data, help='Normalize and scale data.')
 
-args = vars(parser.parse_args())
+args, unknown = parser.parse_known_args()
+args = vars(args)
 
 if __name__ == "__main__":
     train_model(args)

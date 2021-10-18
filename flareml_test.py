@@ -26,10 +26,10 @@ import time
 
 from flareml_utils import *
 
-TEST_INPUT = 'test_data/flaringar_simple_random_40.csv'
+TEST_INPUT = 'data/test_data/flaringar_simple_random_40.csv'
 normalize_data = False 
 
-def test_models(args):
+def test_model(args):
     algorithm = args['algorithm']
     if not algorithm.strip().upper() in algorithms:
         print('Invalid algorithm:', algorithm, '\nAlgorithm must one of: ', algorithms)
@@ -135,12 +135,13 @@ def test_models(args):
     test_y = [mapping[y] for y in test_y]
     log_cv_report(test_y,result)
 
-    save_result_to_file(alg, result, dataset[:],flares_names)
+    save_result_to_file(alg, result, dataset[:],flares_names, modelid)
     if alg == 'ENS':
-        save_result_to_file('RF', rf_result[:], dataset[:],flares_names)
-        save_result_to_file('MLP', mlp_result[:], dataset[:],flares_names)
-        save_result_to_file('ELM', elm_result[:], dataset[:],flares_names)
+        save_result_to_file('RF', rf_result[:], dataset[:],flares_names, modelid)
+        save_result_to_file('MLP', mlp_result[:], dataset[:],flares_names, modelid)
+        save_result_to_file('ELM', elm_result[:], dataset[:],flares_names, modelid)
     print('Finished the prediction task..')
+    
                     
 '''
 Command line parameters parser
@@ -153,9 +154,10 @@ parser.add_argument('-a',  '--algorithm', default='ENS',  help='Algorithm to use
 parser.add_argument('-m', '--modelid', default='default_model', help='model id to save or load it as a file name. This is to identity each trained model.')
 parser.add_argument('-n', '--normalize_data', default=normalize_data, help='Normalize and scale data.')
 
-args = vars(parser.parse_args())
+args, unknown = parser.parse_known_args()
+args = vars(args)
 
 if __name__ == "__main__":
-    test_models(args)
+    test_model(args)
 
 
