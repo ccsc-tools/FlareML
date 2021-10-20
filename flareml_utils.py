@@ -168,7 +168,7 @@ def are_model_files_exist(models_dir, modelId, alg='ENS'):
     
     fname = models_dir + "/" + modelId + "_elm" + modelExenstion
     elm_model_exist  = is_file_exists(fname)
-    print('elm_model_exist:', elm_model_exist)
+    
     if alg == 'ENS':
         exist = (rf_model_exist and mlp_model_exist and elm_model_exist)
         if exist:
