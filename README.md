@@ -1,4 +1,5 @@
 ## Predicting Solar Flares with Ensemble Machine Learning<br>
+[![DOI](https://zenodo.org/badge/417927505.svg)](https://zenodo.org/badge/latestdoi/417927505)
 
 ## Authors
 Yasser Abduallah, Jason T. L. Wang, Haimin Wang
