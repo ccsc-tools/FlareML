@@ -19,7 +19,8 @@
 from __future__ import division
 import warnings 
 warnings.filterwarnings('ignore')
-
+import numpy as np
+import matplotlib.pyplot as plt
 import json
 import pandas as pd
 from sklearn.model_selection import train_test_split
@@ -167,7 +168,7 @@ def are_model_files_exist(models_dir, modelId, alg='ENS'):
     
     fname = models_dir + "/" + modelId + "_elm" + modelExenstion
     elm_model_exist  = is_file_exists(fname)
-    
+    print('elm_model_exist:', elm_model_exist)
     if alg == 'ENS':
         exist = (rf_model_exist and mlp_model_exist and elm_model_exist)
         if exist:
@@ -406,7 +407,9 @@ def rf_train_model(train_x=None,
                test_y=None, 
                model_id="default_model"):
 
-    alg_model = RandomForestClassifier(n_estimators = 1000, max_features=6, n_jobs=1)
+    alg_model = RandomForestClassifier(n_estimators = 1000, 
+                                       max_features=6, 
+                                       n_jobs=1)
     
 
     result  = model_train_wrapper('RF', alg_model, 
@@ -603,11 +606,36 @@ def map_prediction(prediction):
     return result
 
 def log_cv_report(y_true,y_pred):
-    r = multilabel_confusion_matrix(y_true, y_pred)
+    labels = list(set(y_true)) 
+    labels.sort()
+    log(labels)
+    r = multilabel_confusion_matrix(y_true, y_pred,labels=labels)
+    pm={}
+    
+    for i in range(len(labels)):
+        l = labels[i]
+        c = {}
+        cm = r[i]
+        c['TN'] = cm[0][0]
+        c['FN'] = cm[1][0]
+        c['TP'] = cm[1][1]
+        c['FP'] = cm[0][1]
+        c['T'] = cm.sum()
+        if (c['FP'] == 0):
+            c['TN'] = c['TN'] - 1
+            c['FP'] = 1
+        if (c['FN'] == 0):
+            c['TP'] = c['TP'] - 1
+            c['FN'] = 1
+                  
+        pm[l] = calc_metrics(c['TP'],c['TN'],c['FP'],c['FN'])
+        
     log(r)
     ac = accuracy_score(y_true, y_pred)
     log(ac)
     log('Prediction accuracy:', ac)
+    # print(pm)
+    return pm;
 
 def save_result_to_file(alg, result, dataset, flares_names, modelid):
     result_file =  'results' + os.sep  + str(alg) +'_' + str(modelid) + '_result.csv'
@@ -624,5 +652,85 @@ def create_default_dirs():
     for d in ['custom_models', 'models', 'logs', 'test_data', 'train_data', 'results']:
         if not os.path.exists(d) :
             os.mkdir(d)
+def truncate_float(number, digits=4) -> float:
+    try :
+        if math.isnan(number):
+            return 0.0
+        stepper = 10.0 ** digits
+        return math.trunc(stepper * number) / stepper
+    except Exception as e:
+        return number
+def calc_metrics(TP,TN,FP,FN):
+    P = TP + FN 
+    N = TN + FP
+    T = N + P 
+    accuracy = 0
+    balanced_accuracy = 0 
+    precision = 0 
+    recall = 0 
+    TSS = 0 
+    
 
+    accuracy = (TP+TN) / (TP+FP+TN+FN)
+    BACC =  ( (TP/(TP + FN)) + (TN/(TN + FP)) ) /2
+    TPR = TP/(TP+FN)
+    FPR = FP/(FP+TN)
+    precision = TP / (TP + FP)
+    recall = TP / (TP  + FN) 
+    TSS = (TP/(TP+FN)) - (FP/(FP+TN))
+
+
+    return [truncate_float(BACC),truncate_float(TSS)]
+        
+def plot_result(result):
+    alg = list(result.keys())[0]
+    B = result[alg]['B']
+    C = result[alg]['C']
+    M = result[alg]['M']
+    X = result[alg]['X']
+    
+    data = [[round(abs(B[0]),2), round( abs(C[0]),2), round(abs(M[0]),2), round(abs(X[0]),2)],
+    [round(abs(B[1]),2), round(abs(C[1]),2),round(abs(M[1]),2), round(abs(X[1]),2)]]
+    
+    BACC = data[0]
+    BACC.append(round(np.array(BACC).mean(),2))
+    TSS = data[1]
+    TSS.append(round(np.array(TSS).mean(),2))
+    X = np.arange(4)
+    labels = list(result[alg].keys())
+    labels.append('AVG')
+    x = np.arange(len(labels))  # the label locations
+    width = 0.25  # the width of the bars
+    figsize=(8.4,4.8)
+    fig, ax = plt.subplots(figsize=figsize)
+    rects1 = ax.bar(x - width/2, BACC, width, label='BACC')
+    rects2 = ax.bar(x + width/2, TSS, width, label='TSS')
+
+    
+    # Add some text for labels, title and custom x-axis tick labels, etc.
+    ax.set_ylabel('')
+    ax.set_xlabel('Flare Class')
+    ax.set_title('Prediction Result for Algorithm: ' + str(alg))
+    ax.set_xticks(x)
+    ax.set_xticklabels(labels)
+    ax.legend()
+    ax.set_yticks([0.0,0.2,0.4,0.6,0.8,1.0])
+    l = [0.0,0.2,0.4,0.6,0.8,1.0]
+    s = [str(i) for i in l]
+    ax.set_yticklabels(s)
+    ax.spines['right'].set_color('none')
+    ax.spines['top'].set_color('none')
+    ax.legend(bbox_to_anchor=(1.1, 1.05))
+    ax.bar_label(rects1, padding=3)
+    ax.bar_label(rects2, padding=3)
+    fig.tight_layout()
+    
+    plt.show()    
+    # fig = plt.figure()
+    # ax = fig.add_axes([0,0,1,1])
+    # ax.bar(X + 0.00, data[0], color = 'b', width = 0.2)
+    # ax.bar(X + 0.25, data[1], color = 'g', width = 0.2)
+    # plt.ylim(ymax = 1, ymin = 0)
+    # ax.set_xticklabels(list(result[alg].keys()))
+    # plt.show()     
 create_default_dirs()  

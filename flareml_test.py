@@ -23,6 +23,7 @@ import csv
 from datetime import datetime
 import argparse
 import time 
+from sklearn.metrics import confusion_matrix
 
 from flareml_utils import *
 
@@ -30,6 +31,7 @@ TEST_INPUT = 'data/test_data/flaringar_simple_random_40.csv'
 normalize_data = False 
 
 def test_model(args):
+    pm = {}
     algorithm = args['algorithm']
     if not algorithm.strip().upper() in algorithms:
         print('Invalid algorithm:', algorithm, '\nAlgorithm must one of: ', algorithms)
@@ -48,10 +50,12 @@ def test_model(args):
     if modelid.strip() == '':
         print('Model id can not be empty')
         sys.exit()
+    verbose = False;
+    if 'verbose' in args:
+        verbose = boolean(args['verbose'])
+    
+    set_log_to_terminal(verbose)
 
-    set_log_to_terminal(boolean(args['verbose']))
-    if not boolean(args['verbose']):
-        print('Verbose is turned off, process is running without verbose, training result will be printed, please wait...')
     log('Your provided arguments as: ', args)
 
     models_dir = custom_models_dir
@@ -63,6 +67,7 @@ def test_model(args):
         models_dir = default_models_dir
         default_id_message =   '.'
     exists = are_model_files_exist(models_dir , modelid, alg=alg)
+    log('model exists:', exists, 'for:', modelid, 'and', alg)
     log('partial_ens_trained:', get_partial_ens_trained())
     
     if not exists:
@@ -106,42 +111,46 @@ def test_model(args):
     test_y = dataset['flarecn']
     test_x = removeDataColumn('flarecn',dataset)
 
-    print('Predicting...')
-    
+    print('Prediction is in progress, please wait until it is done...')
+    true_y = [mapping[y] for y in test_y]
     if alg in ['RF','ENS']:
         rf_result = model_prediction_wrapper('RF',None, test_x, test_y, model_id = modelid)
-        print('Done RF  model prediction..')
     
     if alg in ['MLP','ENS']:
         mlp_result = model_prediction_wrapper('MLP',None, test_x, test_y, model_id = modelid)
-        print('Done MLP model prediction..')
 
     if alg in ['ELM','ENS']:
         elm_result = model_prediction_wrapper('ELM',None, test_x, test_y, model_id = modelid)
-        print('Done ELM model predictions:')
     
     if alg == 'ENS':
-        print('Computing ENS algorithm result...')
         result = compute_ens_result(rf_result, mlp_result, elm_result)
+        pm ['ENS'] = log_cv_report(true_y,result)
+
         rf_result = map_prediction(rf_result)
+        pm['RF'] = log_cv_report(true_y,rf_result)
+        
         mlp_result = map_prediction(mlp_result)
+        pm['MLP'] = log_cv_report(true_y,mlp_result)
+        
         elm_result = map_prediction(elm_result)
+        pm['ELM'] = log_cv_report(true_y,elm_result)
     elif alg == 'RF':
         result = map_prediction(rf_result)
+        pm['RF'] = log_cv_report(true_y,result)
     elif alg == 'MLP':
         result = map_prediction(mlp_result)
+        pm['MLP'] = log_cv_report(true_y,result)
     else:
         result = map_prediction(elm_result)
-    test_y = [mapping[y] for y in test_y]
-    log_cv_report(test_y,result)
+        pm['ELM'] = log_cv_report(true_y,result)
+    log_cv_report(true_y,result)
 
-    save_result_to_file(alg, result, dataset[:],flares_names, modelid)
-    if alg == 'ENS':
-        save_result_to_file('RF', rf_result[:], dataset[:],flares_names, modelid)
-        save_result_to_file('MLP', mlp_result[:], dataset[:],flares_names, modelid)
-        save_result_to_file('ELM', elm_result[:], dataset[:],flares_names, modelid)
+
     print('Finished the prediction task..')
-    
+    # return pm
+    res = {}
+    res[alg] = pm[alg]
+    return  res
                     
 '''
 Command line parameters parser
@@ -158,6 +167,7 @@ args, unknown = parser.parse_known_args()
 args = vars(args)
 
 if __name__ == "__main__":
-    test_model(args)
+    pm=test_model(args)
+    plot_result(pm)
 
 

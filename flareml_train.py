@@ -23,7 +23,8 @@ import csv
 from datetime import datetime
 import argparse
 import time 
-
+from tqdm.notebook import tqdm
+from time import sleep
 from flareml_utils import *
 
 TRAIN_INPUT = 'data/train_data/flaringar_training_sample.csv'
@@ -53,11 +54,16 @@ def train_model(args):
         if not boolean(ans):
             print('Existing..')
             sys.exit()
-    normalize_data = boolean(args['normalize_data'])
+    if 'normalize_data' in args.keys():
+        normalize_data = boolean(args['normalize_data'])
+    else:
+        normalize_data = False
     log('normalize_data:', normalize_data)
-    set_log_to_terminal(boolean(args['verbose']))
-    if not boolean(args['verbose']):
-        print('Verbose is turned off, process is running without verbose, training result will be printed, please wait...')
+    
+    if 'verbose' in args.keys():
+        set_log_to_terminal(boolean(args['verbose']))
+    else:
+        verbose = False
     log('Your provided arguments as: ', args)
     log("=============================== Logging Stared using algorithm: " + algorithm +" ==============================")
     log("Execution time started: " + timestr)
@@ -95,22 +101,27 @@ def train_model(args):
     if modelid == 'default_model' :
         models_dir = default_models_dir
     alg = algorithm.strip().upper()
+    print('Training is in progress, please wait until it is done...')
+    t = 33
     if alg in ['RF','ENS']:
+        # print('Training is in progress...')
         rf_model = rf_train_model(train_x, test_x, train_y, test_y, model_id=modelid)
-        print('RF  model train done.')
-    
+        # print('RF  model train done.')
+        t  = t + 33
     if alg in ['MLP','ENS']:
+        # print('Training is in progress...')
         mlp_model = mlp_train_model(train_x, test_x, train_y, test_y, model_id=modelid)
-        print('MLP model train done.')
-
+        # print('MLP model train done.')
+        t  = t + 33        
     if alg in ['ELM','ENS']:
-        
+        # print('Training is in progress...')
         elm_model = elm_train_model(train_x, test_x, train_y, test_y,model_id=modelid)
-        print('ELM model train done.')
+        t  = t + 33        
+        # print('ELM model train done.')
     ens = ''
-    if alg == 'ENS':
-        ens = '(s)'
-    print('Finished training the', alg ,'model' + str(ens)+  ', you may use the flareml_test.py program to make prediction.')
+    # if alg == 'ENS':
+    #     ens = '(s)'
+    print('\nFinished training the', alg ,'model' + str(ens)+  ', you may use the flareml_test.py program to make prediction.')
                     
 '''
 Command line parameters parser
