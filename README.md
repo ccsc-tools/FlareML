@@ -22,6 +22,7 @@ Please note that starting Binder might take some time to create and start the im
 
 |Library | Version   | Description  |
 |---|---|---|
+|matplotlib|3.4.2| Graphics and visualization|
 |numpy| 1.19.5| Array manipulation|
 |scikit-learn| 0.24.2| Machine learning|
 | sklearn-extensions | 0.0.2  | Extension for scikit-learn |
