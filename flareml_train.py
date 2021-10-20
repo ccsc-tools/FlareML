@@ -22,8 +22,7 @@ import os
 import csv 
 from datetime import datetime
 import argparse
-import time 
-from tqdm.notebook import tqdm
+import time
 from time import sleep
 from flareml_utils import *
 
