@@ -103,20 +103,18 @@ def train_model(args):
     print('Training is in progress, please wait until it is done...')
     t = 33
     if alg in ['RF','ENS']:
-        # print('Training is in progress...')
         rf_model = rf_train_model(train_x, test_x, train_y, test_y, model_id=modelid)
-        # print('RF  model train done.')
+        if alg =='ENS':
+            print('Finished 1/3 training..')
         t  = t + 33
     if alg in ['MLP','ENS']:
-        # print('Training is in progress...')
         mlp_model = mlp_train_model(train_x, test_x, train_y, test_y, model_id=modelid)
-        # print('MLP model train done.')
-        t  = t + 33        
+        if alg =='ENS':
+            print('Finished 2/3 training..')     
     if alg in ['ELM','ENS']:
-        # print('Training is in progress...')
         elm_model = elm_train_model(train_x, test_x, train_y, test_y,model_id=modelid)
-        t  = t + 33        
-        # print('ELM model train done.')
+        if alg =='ENS':
+            print('Finished 3/3 training..')
     ens = ''
     # if alg == 'ENS':
     #     ens = '(s)'
