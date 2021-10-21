@@ -80,7 +80,7 @@ def test_model(args):
     log("Log files used in this run: " + logFile)
     log("train data set: " + TEST_INPUT)
     log("Creating a model with id: " + modelid)
-    print("Starting testing with a model with id:",  modelid, 'testung data file:', TEST_INPUT)
+    print("Starting testing with a model with id:",  modelid, 'testing data file:', TEST_INPUT)
     print('Loading data set...')
     dataset = load_dataset_csv(TEST_INPUT)
     log("orig cols: " + dataset.columns)
