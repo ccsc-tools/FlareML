@@ -38,13 +38,13 @@ def test_model(args):
         sys.exit()
     TEST_INPUT = args['test_data_file']
     if TEST_INPUT.strip() == '':
-        print('Training data file can not be empty')
+        print('Testing data file can not be empty')
         sys.exit() 
     if not os.path.exists(TEST_INPUT):
-        print('Training data file does not exist:', TEST_INPUT)
+        print('Testing data file does not exist:', TEST_INPUT)
         sys.exit()
     if not os.path.isfile(TEST_INPUT):
-        print('Training data is not a file:', TEST_INPUT)
+        print('Testing data is not a file:', TEST_INPUT)
         sys.exit()
     modelid = args['modelid']
     if modelid.strip() == '':
@@ -80,7 +80,7 @@ def test_model(args):
     log("Log files used in this run: " + logFile)
     log("train data set: " + TEST_INPUT)
     log("Creating a model with id: " + modelid)
-    print("Starting training with a model with id:",  modelid, 'training data file:', TEST_INPUT)
+    print("Starting testing with a model with id:",  modelid, 'testung data file:', TEST_INPUT)
     print('Loading data set...')
     dataset = load_dataset_csv(TEST_INPUT)
     log("orig cols: " + dataset.columns)
