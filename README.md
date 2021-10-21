@@ -1,4 +1,4 @@
-## Predicting Solar Flares with Ensemble Machine Learning<br>
+## Predicting Solar Flares with Machine Learning<br>
 [![DOI](https://zenodo.org/badge/417927505.svg)](https://zenodo.org/badge/latestdoi/417927505)
 
 ## Authors
