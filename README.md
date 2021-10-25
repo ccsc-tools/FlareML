@@ -34,6 +34,8 @@ This notebook is Binder enabled and can be run on [mybinder.org](https://mybinde
 Please note that starting Binder might take some time to create and start the image.
 
 
+For the latest updates of FlareML refer to https://github.com/deepsuncode/Machine-learning-as-a-service
+
 ## Installation on local machine
 
 |Library | Version   | Description  |
