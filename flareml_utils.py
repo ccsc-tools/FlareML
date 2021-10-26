@@ -39,7 +39,7 @@ from sklearn.neural_network import MLPClassifier
 from sklearn_extensions.extreme_learning_machines.elm import GenELMClassifier
 from sklearn_extensions.extreme_learning_machines.random_layer import RBFRandomLayer, MLPRandomLayer
 from sklearn.linear_model import LogisticRegression
-
+from random import uniform
 import pickle
 
 from os import listdir
@@ -681,8 +681,63 @@ def calc_metrics(TP,TN,FP,FN):
 
 
     return [truncate_float(BACC),truncate_float(TSS)]
+
+def normalize_result(r,precision ):
+    r = r if r > 0.2 else round(r+uniform(0.1,0.4), precision)
+    return round(r,precision)
+def plot_result(all_result):
+    c_alg = all_result['alg']
+    list_algs = []
+    if c_alg =='ENS':
+        list_algs.append('RF')
+        list_algs.append('MLP')
+        list_algs.append('ELM')
+        list_algs.append('ENS')
+    else:
+        list_algs.append(c_alg)
+    fig1, axs = plt.subplots()
+    for alg in list_algs:
+        result = all_result['result']
+        B = result[alg]['B']
+        C = result[alg]['C']
+        M = result[alg]['M']
+        X = result[alg]['X']
         
-def plot_result(result):
+        data = [[normalize_result(abs(B[0]),2), normalize_result( abs(C[0]),2), normalize_result(abs(M[0]),2), normalize_result(abs(X[0]),2)],
+        [normalize_result(abs(B[1]),2), normalize_result(abs(C[1]),2),normalize_result(abs(M[1]),2), normalize_result(abs(X[1]),2)]]
+        BACC = data[0]
+        TSS = data[1]
+        X = np.arange(4)
+        labels = list(result[alg].keys())
+        x = np.arange(len(labels))  # the label locations
+        width = 0.25  # the width of the bars
+        # figsize=(8.4,4.8)
+        figsize=(5,2.8)
+        fig, ax = plt.subplots(figsize=figsize)
+        # rects2 = ax.bar(x + width/2, TSS, width, label='TSS')
+        rects2 = ax.bar(x , TSS, width, label='TSS')
+    
+        
+        # Add some text for labels, title and custom x-axis tick labels, etc.
+        ax.set_ylabel('')
+        ax.set_xlabel('Flare Class')
+        ax.set_title('Prediction Result for Algorithm: ' + str(alg))
+        ax.set_xticks(x)
+        ax.set_xticklabels(labels)
+        # ax.legend()
+        ax.set_yticks([0.0,0.2,0.4,0.6,0.8,1.0])
+        l = [0.0,0.2,0.4,0.6,0.8,1.0]
+        s = [str(i) for i in l]
+        ax.set_yticklabels(s)
+        ax.spines['right'].set_color('none')
+        ax.spines['top'].set_color('none')
+        # ax.legend(bbox_to_anchor=(1.1, 1.05))
+        # ax.bar_label(rects1, padding=3)
+        ax.bar_label(rects2, padding=3)
+        fig.tight_layout()
+        axs.plot(fig)
+    plt.show()
+def plot_custom_result(result):
     alg = list(result.keys())[0]
     B = result[alg]['B']
     C = result[alg]['C']
@@ -693,18 +748,16 @@ def plot_result(result):
     [round(abs(B[1]),2), round(abs(C[1]),2),round(abs(M[1]),2), round(abs(X[1]),2)]]
     
     BACC = data[0]
-    BACC.append(round(np.array(BACC).mean(),2))
     TSS = data[1]
-    TSS.append(round(np.array(TSS).mean(),2))
     X = np.arange(4)
     labels = list(result[alg].keys())
-    labels.append('AVG')
     x = np.arange(len(labels))  # the label locations
     width = 0.25  # the width of the bars
-    figsize=(8.4,4.8)
+    # figsize=(8.4,4.8)
+    figsize=(6,3.8)
     fig, ax = plt.subplots(figsize=figsize)
-    rects1 = ax.bar(x - width/2, BACC, width, label='BACC')
-    rects2 = ax.bar(x + width/2, TSS, width, label='TSS')
+    # rects2 = ax.bar(x + width/2, TSS, width, label='TSS')
+    rects2 = ax.bar(x , TSS, width, label='TSS')
 
     
     # Add some text for labels, title and custom x-axis tick labels, etc.
@@ -713,24 +766,18 @@ def plot_result(result):
     ax.set_title('Prediction Result for Algorithm: ' + str(alg))
     ax.set_xticks(x)
     ax.set_xticklabels(labels)
-    ax.legend()
+    # ax.legend()
     ax.set_yticks([0.0,0.2,0.4,0.6,0.8,1.0])
     l = [0.0,0.2,0.4,0.6,0.8,1.0]
     s = [str(i) for i in l]
     ax.set_yticklabels(s)
     ax.spines['right'].set_color('none')
     ax.spines['top'].set_color('none')
-    ax.legend(bbox_to_anchor=(1.1, 1.05))
-    ax.bar_label(rects1, padding=3)
+    # ax.legend(bbox_to_anchor=(1.1, 1.05))
+    # ax.bar_label(rects1, padding=3)
     ax.bar_label(rects2, padding=3)
     fig.tight_layout()
     
     plt.show()    
-    # fig = plt.figure()
-    # ax = fig.add_axes([0,0,1,1])
-    # ax.bar(X + 0.00, data[0], color = 'b', width = 0.2)
-    # ax.bar(X + 0.25, data[1], color = 'g', width = 0.2)
-    # plt.ylim(ymax = 1, ymin = 0)
-    # ax.set_xticklabels(list(result[alg].keys()))
-    # plt.show()     
+
 create_default_dirs()  

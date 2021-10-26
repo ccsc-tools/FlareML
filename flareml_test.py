@@ -150,6 +150,8 @@ def test_model(args):
     # return pm
     res = {}
     res[alg] = pm[alg]
+    res["alg"] = alg
+    res['result']  = pm
     return  res
                     
 '''
