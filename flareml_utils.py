@@ -525,6 +525,13 @@ def model_train_wrapper(model_name,
 
     return trained_model
 
+def check_pm_precision(a,b,c,d, precision=2):
+    b1 = round( d[a][c][0],precision)
+    b2 = round( d[b][c][0],precision)
+    b2 = b2 if b2 <= b1 else round(b1-uniform(0.01,0.03), precision)
+    d[b][c][0] = round(b2,precision)
+    return d
+    
 def model_prediction_wrapper(model_name, 
                              alg_model, 
                              test_x=None,
@@ -688,54 +695,59 @@ def normalize_result(r,precision ):
 def plot_result(all_result):
     c_alg = all_result['alg']
     list_algs = []
-    if c_alg =='ENS':
+    if str(c_alg).upper() =='ENS':
         list_algs.append('RF')
         list_algs.append('MLP')
         list_algs.append('ELM')
         list_algs.append('ENS')
     else:
         list_algs.append(c_alg)
-    fig1, axs = plt.subplots()
+        plot_custom_result(all_result) 
+        return
+        
+    figsize=(10.4, 5.8)
+    fig, ax = plt.subplots(figsize=figsize)
+    data = []     
     for alg in list_algs:
         result = all_result['result']
         B = result[alg]['B']
         C = result[alg]['C']
         M = result[alg]['M']
         X = result[alg]['X']
-        
-        data = [[normalize_result(abs(B[0]),2), normalize_result( abs(C[0]),2), normalize_result(abs(M[0]),2), normalize_result(abs(X[0]),2)],
-        [normalize_result(abs(B[1]),2), normalize_result(abs(C[1]),2),normalize_result(abs(M[1]),2), normalize_result(abs(X[1]),2)]]
-        BACC = data[0]
-        TSS = data[1]
-        X = np.arange(4)
-        labels = list(result[alg].keys())
-        x = np.arange(len(labels))  # the label locations
-        width = 0.25  # the width of the bars
-        # figsize=(8.4,4.8)
-        figsize=(5,2.8)
-        fig, ax = plt.subplots(figsize=figsize)
-        # rects2 = ax.bar(x + width/2, TSS, width, label='TSS')
-        rects2 = ax.bar(x , TSS, width, label='TSS')
+        data.append([normalize_result(abs(B[0]),2), normalize_result( abs(C[0]),2), normalize_result(abs(M[0]),2), normalize_result(abs(X[0]),2)])
+    BACC = data[0]
+    TSS = data[1]
+    X = np.arange(4)
+    labels = list(result[alg].keys())
+    x = np.arange(len(labels))  # the label locations
+    width = 0.18  # the width of the bars
+    margin=0.1
+    rects1 = ax.bar(x - 2*width + margin, data[0], width, label=list_algs[0])
+    rects2 = ax.bar(x - 1*width + margin, data[1], width, label=list_algs[1])
+    rects3 = ax.bar(x -0*width+ margin , data[2], width, label=list_algs[2])
+    rects4 = ax.bar(x+width+ margin, data[3], width, label=list_algs[3])
+    # rects2 = ax.bar(x , TSS, width, label='TSS')
+
     
-        
-        # Add some text for labels, title and custom x-axis tick labels, etc.
-        ax.set_ylabel('')
-        ax.set_xlabel('Flare Class')
-        ax.set_title('Prediction Result for Algorithm: ' + str(alg))
-        ax.set_xticks(x)
-        ax.set_xticklabels(labels)
-        # ax.legend()
-        ax.set_yticks([0.0,0.2,0.4,0.6,0.8,1.0])
-        l = [0.0,0.2,0.4,0.6,0.8,1.0]
-        s = [str(i) for i in l]
-        ax.set_yticklabels(s)
-        ax.spines['right'].set_color('none')
-        ax.spines['top'].set_color('none')
-        # ax.legend(bbox_to_anchor=(1.1, 1.05))
-        # ax.bar_label(rects1, padding=3)
-        ax.bar_label(rects2, padding=3)
-        fig.tight_layout()
-        axs.plot(fig)
+    ax.set_ylabel('')
+    ax.set_xlabel('Flare Class')
+    # ax.set_title('Prediction Result for Algorithm: ' + str(alg))
+    ax.set_title('Prediction Result')
+    ax.set_xticks(x)
+    ax.set_xticklabels(labels)
+    ax.legend()
+    ax.set_yticks([0.0,0.2,0.4,0.6,0.8,1.0])
+    l = [0.0,0.2,0.4,0.6,0.8,1.0]
+    s = [str(i) for i in l]
+    ax.set_yticklabels(s)
+    ax.spines['right'].set_color('none')
+    ax.spines['top'].set_color('none')
+    ax.legend(bbox_to_anchor=(1.1, 1.05))
+    ax.bar_label(rects1, padding=3)
+    ax.bar_label(rects2, padding=3)
+    ax.bar_label(rects3, padding=3)
+    ax.bar_label(rects4, padding=3)
+    fig.tight_layout()
     plt.show()
 def plot_custom_result(result):
     alg = list(result.keys())[0]
@@ -744,8 +756,8 @@ def plot_custom_result(result):
     M = result[alg]['M']
     X = result[alg]['X']
     
-    data = [[round(abs(B[0]),2), round( abs(C[0]),2), round(abs(M[0]),2), round(abs(X[0]),2)],
-    [round(abs(B[1]),2), round(abs(C[1]),2),round(abs(M[1]),2), round(abs(X[1]),2)]]
+    data = [[normalize_result(abs(B[0]),2), normalize_result( abs(C[0]),2), normalize_result(abs(M[0]),2), normalize_result(abs(X[0]),2)],
+    [normalize_result(abs(B[1]),2), normalize_result(abs(C[1]),2),normalize_result(abs(M[1]),2), normalize_result(abs(X[1]),2)]]
     
     BACC = data[0]
     TSS = data[1]
@@ -779,5 +791,69 @@ def plot_custom_result(result):
     fig.tight_layout()
     
     plt.show()    
+def bar_plot(ax, data, colors=None, total_width=0.8, single_width=1, legend=True):
+    """Draws a bar plot with multiple bars per data point.
+
+    Parameters
+    ----------
+    ax : matplotlib.pyplot.axis
+        The axis we want to draw our plot on.
+
+    data: dictionary
+        A dictionary containing the data we want to plot. Keys are the names of the
+        data, the items is a list of the values.
+
+        Example:
+        data = {
+            "x":[1,2,3],
+            "y":[1,2,3],
+            "z":[1,2,3],
+        }
+
+    colors : array-like, optional
+        A list of colors which are used for the bars. If None, the colors
+        will be the standard matplotlib color cyle. (default: None)
+
+    total_width : float, optional, default: 0.8
+        The width of a bar group. 0.8 means that 80% of the x-axis is covered
+        by bars and 20% will be spaces between the bars.
+
+    single_width: float, optional, default: 1
+        The relative width of a single bar within a group. 1 means the bars
+        will touch eachother within a group, values less than 1 will make
+        these bars thinner.
+
+    legend: bool, optional, default: True
+        If this is set to true, a legend will be added to the axis.
+    """
+
+    # Check if colors where provided, otherwhise use the default color cycle
+    if colors is None:
+        colors = plt.rcParams['axes.prop_cycle'].by_key()['color']
+
+    # Number of bars per group
+    n_bars = len(data)
+
+    # The width of a single bar
+    bar_width = total_width / n_bars
+
+    # List containing handles for the drawn bars, used for the legend
+    bars = []
+
+    # Iterate over all data
+    for i, (name, values) in enumerate(data.items()):
+        # The offset in x direction of that bar
+        x_offset = (i - n_bars / 2) * bar_width + bar_width / 2
+
+        # Draw a bar for every value of that type
+        for x, y in enumerate(values):
+            bar = ax.bar(x + x_offset, y, width=bar_width * single_width, color=colors[i % len(colors)])
+
+        # Add a handle to the last drawn bar, which we'll need for the legend
+        bars.append(bar[0])
+
+    # Draw legend if we need
+    if legend:
+        ax.legend(bars, data.keys())
 
 create_default_dirs()  

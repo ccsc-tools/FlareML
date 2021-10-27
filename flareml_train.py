@@ -30,6 +30,8 @@ TRAIN_INPUT = 'data/train_data/flaringar_training_sample.csv'
 TEST_INPUT = 'data/test_data/flaringar_simple_random_40.csv'
 normalize_data = False
 def train_model(args):
+    if not 'algorithm' in args:
+        args['algorithm'] ='ENS'
     algorithm = args['algorithm']
     if not algorithm.strip().upper() in algorithms:
         print('Invalid algorithm:', algorithm, '\nAlgorithm must one of: ', algorithms)

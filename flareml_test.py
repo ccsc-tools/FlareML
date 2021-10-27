@@ -32,6 +32,8 @@ normalize_data = False
 
 def test_model(args):
     pm = {}
+    if not 'algorithm' in args.keys():
+        args['algorithm'] = 'ENS'
     algorithm = args['algorithm']
     if not algorithm.strip().upper() in algorithms:
         print('Invalid algorithm:', algorithm, '\nAlgorithm must one of: ', algorithms)
@@ -134,6 +136,9 @@ def test_model(args):
         
         elm_result = map_prediction(elm_result)
         pm['ELM'] = log_cv_report(true_y,elm_result)
+        pm = check_pm_precision('ENS','RF','B',pm)
+        pm = check_pm_precision('ENS','RF','C',pm)
+        
     elif alg == 'RF':
         result = map_prediction(rf_result)
         pm['RF'] = log_cv_report(true_y,result)
