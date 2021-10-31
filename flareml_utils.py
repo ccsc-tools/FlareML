@@ -723,7 +723,7 @@ def plot_result(all_result):
     width = 0.18  # the width of the bars
     margin=0.1
     rects1 = ax.bar(x - 2*width + margin, data[0], width, label=list_algs[0])
-    rects2 = ax.bar(x - 1*width + margin, data[1], width, label=list_algs[1])
+    rects2 = ax.bar(x - 1*width + margin, data[1], width, color='yellow', label=list_algs[1])
     rects3 = ax.bar(x -0*width+ margin , data[2], width, color='lightblue', label=list_algs[2])
     rects4 = ax.bar(x+width+ margin, data[3], width, label=list_algs[3])
     # rects2 = ax.bar(x , TSS, width, label='TSS')
