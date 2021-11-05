@@ -1,5 +1,5 @@
 ## Predicting Solar Flares with Machine Learning<br>
-[![DOI](https://github.com/ccsc-tools/FlareML/blob/main/icons/zenodo.5496355.svg)](https://doi.org/10.5281/zenodo.5634114)
+[![DOI](https://github.com/ccsc-tools/zenodo_icons/blob/main/icons/zenodo.5496355.svg)](https://doi.org/10.5281/zenodo.5634114)
 
 
 ## Authors
