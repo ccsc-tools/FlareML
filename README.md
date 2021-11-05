@@ -1,5 +1,5 @@
 ## Predicting Solar Flares with Machine Learning<br>
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5634114.svg)](https://doi.org/10.5281/zenodo.5634114)
+[![DOI](icons/zenodo.5634114.svg)](https://doi.org/10.5281/zenodo.5634114)
 
 
 ## Authors
