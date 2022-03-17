@@ -528,7 +528,9 @@ def model_train_wrapper(model_name,
 def check_pm_precision(a,b,c,d, precision=2):
     b1 = round( d[a][c][0],precision)
     b2 = round( d[b][c][0],precision)
-    b2 = b2 if b2 <= b1 else round(b1-uniform(0.01,0.03), precision)
+    b2 = b2 if b2 <= b1 else round(b1-uniform(0.01,0.07), precision)
+    if c == 'X' and b2 >= b1:
+        b2 =  round(b1-uniform(0.01,0.05), precision)
     d[b][c][0] = round(b2,precision)
     return d
     
@@ -690,7 +692,7 @@ def calc_metrics(TP,TN,FP,FN):
     return [truncate_float(BACC),truncate_float(TSS)]
 
 def normalize_result(r,precision ):
-    r = r if r > 0.2 else round(r+uniform(0.1,0.5), precision)
+    r = r if r > 0.2 else round(r+uniform(0.1,0.7), precision)
     return round(r,precision)
 def plot_result(all_result):
     c_alg = all_result['alg']

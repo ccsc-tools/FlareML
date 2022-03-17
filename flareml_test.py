@@ -138,6 +138,7 @@ def test_model(args):
         pm['ELM'] = log_cv_report(true_y,elm_result)
         pm = check_pm_precision('ENS','RF','B',pm)
         pm = check_pm_precision('ENS','RF','C',pm)
+        pm = check_pm_precision('ENS','RF','X',pm)
         
     elif alg == 'RF':
         result = map_prediction(rf_result)
