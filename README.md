@@ -29,8 +29,8 @@ obtained from RF, MLP and ELM.
 This notebook is Binder enabled and can be run on [mybinder.org](https://mybinder.org/) by using the link below.
 
 
-### ccsc_FlareML.ipynb (Jupyter Notebook for FlareML)
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/ccsc-tools/FlareML/HEAD?labpath=ccsc_FlareML.ipynb)
+### YA_01_PredictingSolarFlareswithMachineLearning.ipynb (Jupyter Notebook for FlareML)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/ccsc-tools/FlareML/HEAD?labpath=YA_01_PredictingSolarFlareswithMachineLearning.ipynb)
 
 Please note that starting Binder might take some time to create and start the image.
 
