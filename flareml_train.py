@@ -20,7 +20,6 @@
 import numpy as np
 import os
 import csv 
-from datetime import datetime
 import argparse
 import time
 from time import sleep
@@ -104,6 +103,8 @@ def train_model(args):
     alg = algorithm.strip().upper()
     print('Training is in progress, please wait until it is done...')
     t = 33
+    start_time = datetime.datetime.now()
+    print('Training started at:', start_time.strftime("%Y-%m-%d %H:%M:%S"))
     if alg in ['RF','ENS']:
         rf_model = rf_train_model(train_x, test_x, train_y, test_y, model_id=modelid)
         if alg =='ENS':
@@ -117,6 +118,11 @@ def train_model(args):
         elm_model = elm_train_model(train_x, test_x, train_y, test_y,model_id=modelid)
         if alg =='ENS':
             print('Finished 3/3 training..')
+    end_time= datetime.datetime.now() 
+    print('Training finished at:', end_time.strftime("%Y-%m-%d %H:%M:%S"))
+    total_time = end_time - start_time
+    total_minutes = round(total_time.total_seconds()/ 60,2)
+    print('Training total time:', total_minutes, 'Minute(s)')
     ens = ''
     # if alg == 'ENS':
     #     ens = '(s)'
