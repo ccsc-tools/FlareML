@@ -719,6 +719,7 @@ def calc_metrics(TP,TN,FP,FN):
     return [truncate_float(BACC),truncate_float(TSS)]
 
 def normalize_result(r,precision ):
+    return round(r,precision)
     r = r if r > 0.2 else round(r+uniform(0.1,0.7), precision)
     return round(r,precision)
 
