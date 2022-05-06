@@ -48,11 +48,17 @@ import os
 import datetime
 from  pathlib import Path
 
+'''
+Variables declaration
+'''
 custom_models_dir = "custom_models"
 custom_models_data_dir = "custom_models_data"
 custom_models_time_limit = 24 * 60 #24 hours in minutes
 default_models_dir = "models"
 
+'''
+list of algorithms. Please don't change these values.
+'''
 algorithms = ['ENS','RF','MLP','ELM']
 algorithms_names = ['Ensemble','Random Forest','Multiple Layer Perceptron (MLP)' ,'Extreme Learning Machine (ELM)']
 
@@ -87,6 +93,9 @@ log_to_terminal = False
 verbose = False
 save_stdout = sys.stdout
 
+'''
+Redicrecting the stdout output to a variable to be resued to a file or else.
+'''
 @contextmanager
 def stdout_redirected(new_stdout):
     sys.stdout = new_stdout
@@ -99,6 +108,9 @@ def stdout_redirected(new_stdout):
 def stdout_default():
     sys.stdout = save_stdout
 
+'''
+Writes the messages to a logging file and print it to the terminal if the lotToTerminal is set to True.
+'''
 def log(*message,verbose=True, logToTerminal=False, no_time=False, end=' '):
     global noLogging
     if (noLogging) :
@@ -268,7 +280,6 @@ def split_data(dataset, target_column = 'flarecn', test_percent=0.1):
     columns = dataset.columns
     train_x, test_x, train_y, test_y = train_test_split(dataset[columns], labels, test_size = test_percent)
     return (train_x, test_x, train_y, test_y)
-
 
 def normalize_scale_data(d):
     min = np.array(d).min() 
@@ -646,6 +657,9 @@ def log_cv_report(y_true,y_pred):
     # print(pm)
     return pm;
 
+'''
+Saves the result to a give file. It's a good utility to check the result for later use.
+'''
 def save_result_to_file(alg, result, dataset, flares_names, modelid):
     result_file =  'results' + os.sep  + str(alg) +'_' + str(modelid) + '_result.csv'
     print('Writing result to file:', result_file)
@@ -657,10 +671,18 @@ def save_result_to_file(alg, result, dataset, flares_names, modelid):
         dataset_ens = dataset_ens.drop('index', axis=1)
     dataset_ens.to_csv(result_file,index=False)
 
+'''
+Creates the default and required directories if they don't exist.
+This is to avoid any errors when executing the commands during testing or training.
+'''
 def create_default_dirs():
     for d in ['custom_models', 'models', 'logs', 'test_data', 'train_data', 'results']:
         if not os.path.exists(d) :
             os.mkdir(d)
+
+'''
+Utility function to truncate number based on the number of digits.
+'''
 def truncate_float(number, digits=4) -> float:
     try :
         if math.isnan(number):
@@ -669,6 +691,11 @@ def truncate_float(number, digits=4) -> float:
         return math.trunc(stepper * number) / stepper
     except Exception as e:
         return number
+
+'''
+Calculates the metrics used in this study:
+Balanced accuracy, TSS and more
+'''
 def calc_metrics(TP,TN,FP,FN):
     P = TP + FN 
     N = TN + FP
@@ -694,6 +721,10 @@ def calc_metrics(TP,TN,FP,FN):
 def normalize_result(r,precision ):
     r = r if r > 0.2 else round(r+uniform(0.1,0.7), precision)
     return round(r,precision)
+
+'''
+Plots the default model results.
+'''
 def plot_result(all_result):
     c_alg = all_result['alg']
     list_algs = []
@@ -731,7 +762,7 @@ def plot_result(all_result):
     # rects2 = ax.bar(x , TSS, width, label='TSS')
 
     
-    ax.set_ylabel('')
+    ax.set_ylabel('TSS')
     ax.set_xlabel('Flare Class')
     # ax.set_title('Prediction Result for Algorithm: ' + str(alg))
     ax.set_title('Prediction Result')
@@ -749,9 +780,14 @@ def plot_result(all_result):
     ax.bar_label(rects2, padding=3)
     ax.bar_label(rects3, padding=3)
     ax.bar_label(rects4, padding=3)
+    plt.ylabel('TSS')
     fig.tight_layout()
     plt.show()
-    
+
+'''
+Plot the custom models results. This is when user trains a new model
+and produces a new set of models saved in the custom_models directory.
+'''
 def plot_custom_result(result):
     alg = list(result.keys())[0]
     B = result[alg]['B']
@@ -776,7 +812,7 @@ def plot_custom_result(result):
 
     
     # Add some text for labels, title and custom x-axis tick labels, etc.
-    ax.set_ylabel('')
+    ax.set_ylabel('TSS')
     ax.set_xlabel('Flare Class')
     ax.set_title('Prediction Result for Algorithm: ' + str(alg))
     ax.set_xticks(x)
@@ -792,7 +828,9 @@ def plot_custom_result(result):
     # ax.bar_label(rects1, padding=3)
     ax.bar_label(rects2, padding=3)
     fig.tight_layout()
-    
+    plt.ylabel('TSS')
     plt.show()    
+    if str(alg) == 'ENS':
+        print('Note that the output of ENS is the majority vote of the three underlying models (RF, MLP and ELM), and the accuracy of ENS is calculated based on its output.')
 
 create_default_dirs()  
