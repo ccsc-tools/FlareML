@@ -34,6 +34,7 @@ This notebook is Binder enabled and can be run on [mybinder.org](https://mybinde
 
 Please note that starting Binder might take some time to create and start the image.
 
+Please also note that the execution time in Binder varies based on the availability of resources. The average time to run the notebook is 10-15 minutes, but it could be more.
 
 For the latest updates of FlareML refer to https://github.com/deepsuncode/Machine-learning-as-a-service
 
