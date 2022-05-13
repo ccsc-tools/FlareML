@@ -38,7 +38,7 @@ Please also note that the execution time in Binder varies based on the availabil
 
 For the latest updates of FlareML refer to https://github.com/deepsuncode/Machine-learning-as-a-service
 
-## Installation on local machine
+## Installation on Local Machine
 
 |Library | Version   | Description  |
 |---|---|---|
