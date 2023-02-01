@@ -39,11 +39,14 @@ Please also note that the execution time in Binder varies based on the availabil
 For the latest updates of FlareML refer to https://github.com/deepsuncode/Machine-learning-as-a-service
 
 ## Installation on Local Machine
+Note: Tested on Python version 3.9.13
 
 |Library | Version   | Description  |
 |---|---|---|
-|matplotlib|3.4.2| Graphics and visualization|
+|matplotlib|3.5.2| Graphics and visualization|
 |numpy| 1.19.5| Array manipulation|
 |scikit-learn| 0.24.2| Machine learning|
 | sklearn-extensions | 0.0.2  | Extension for scikit-learn |
-| pandas|1.2.4| Data loading and manipulation|
+| pandas|1.4.4| Data loading and manipulation|
+| scipy| 1.6.3| Science and math|
+
